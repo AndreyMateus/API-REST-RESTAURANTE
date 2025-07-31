@@ -11,3 +11,5 @@ productsRoutes.get("/", productsController.index);
 productsRoutes.get("/:id", productsController.show);
 
 productsRoutes.post("/", productsController.create);
+
+productsRoutes.delete("/:id", productsController.remove);
