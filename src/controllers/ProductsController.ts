@@ -48,7 +48,9 @@ export class ProductsController {
             const descriptionSchemeValidation = z.string({ required_error: "O produto deve conter uma descrição !" });
             const description = descriptionSchemeValidation.parse(body.description);
 
-            const priceSchemeValidation = z.number({ required_error: "O produto deve conter um preço !" }).min(0, "O valor mínimo deve ser maior ou igual a 0!");
+            const priceSchemeValidation = z.number({ required_error: "O produto deve conter um preço !" })
+                .min(0, "O valor mínimo deve ser maior ou igual a 0!")
+                .nonnegative();
             const price = priceSchemeValidation.parse(body.price);
 
             await knex<ProductRepository>("products").insert({
@@ -59,6 +61,25 @@ export class ProductsController {
 
             res.status(201).json({
                 message: "Produto cadastrado com sucesso!"
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async remove(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { params } = req;
+
+            const idSchemeValidation = z.number({ required_error: "O ID do produto deve ser fornecido !" })
+                .nonnegative("O ID não pode ser negativo !");
+
+            const id = idSchemeValidation.parse(+params.id);
+
+            await knex("products").delete().where({ id });
+
+            res.status(200).json({
+                message: "O produto foi removido !"
             });
         } catch (error) {
             next(error);
