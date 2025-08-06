@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { knex } from "../database/knex";
-import { Table } from "../database/types/Table";
+import { TableRepository } from "../database/types/TableRepository";
 import { AppError } from "../utils/AppError";
 import { z } from "zod";
 
@@ -8,7 +8,7 @@ export class TablesController {
 
     async index(req: Request, res: Response, next: NextFunction) {
         try {
-            const result = await knex<Table>("tables");
+            const result = await knex<TableRepository>("tables");
 
             res.status(200).json(result);
         } catch (error) {
@@ -22,7 +22,7 @@ export class TablesController {
 
             const number = zodSchemaValidationNumberTable.parse(Number(req.params.numberTable));
 
-            const result = await knex<Table>("tables")
+            const result = await knex<TableRepository>("tables")
                 .where({
                     number: +number
                 }).first();
@@ -51,7 +51,7 @@ export class TablesController {
                 throw new AppError("Já existe uma mesa cadastrada com esse número !", 409);
             }
 
-            await knex<Table>("tables").insert({
+            await knex<TableRepository>("tables").insert({
                 number
             });
 
@@ -69,7 +69,7 @@ export class TablesController {
 
             const number = zodSchemaValidationNumberTable.parse(Number(req.params.numberTable));
 
-            const tableExists = await knex<Table>("tables").where({
+            const tableExists = await knex<TableRepository>("tables").where({
                 number
             }).first();
 
@@ -77,7 +77,7 @@ export class TablesController {
                 throw new AppError("Mesa não existente !");
             }
 
-            await knex<Table>("tables")
+            await knex<TableRepository>("tables")
                 .delete()
                 .where({
                     number: tableExists.number

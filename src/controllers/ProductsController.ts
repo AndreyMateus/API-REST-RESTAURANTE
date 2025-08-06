@@ -7,6 +7,24 @@ import z from "zod";
 export class ProductsController {
     async index(req: Request, res: Response, next: NextFunction) {
         try {
+            let { alot, name } = req.query;
+            alot = alot || "false";
+
+            if (alot !== "false" && name !== undefined) {
+                const result = await knex<ProductRepository>("products")
+                    .whereLike("name", `%${name}%`);
+                res.status(200).json(result);
+                return;
+            }
+
+            if (name) {
+                const result = await knex<ProductRepository>("products")
+                    .whereLike("name", `%${name}%`)
+                    .first();
+                res.status(200).json(result);
+                return;
+            }
+
             const result = await knex<ProductRepository>("products");
 
             if (!result) {
