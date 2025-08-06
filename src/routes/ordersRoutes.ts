@@ -9,3 +9,5 @@ const ordersController = new OrdersController();
 ordersRoutes.get("/", ordersController.index);
 
 ordersRoutes.get("/:id", ordersController.show);
+
+ordersRoutes.post("/:tablenumber", ordersController.create);
