@@ -1,3 +1,11 @@
 export type OrderRepository = {
-    // TODO: adicionar REPOSITORY ao nome dos Types que são o espelhamento dos registros das tabelas do banco de dados.
+    id: number;
+    tableId: number;
+    productId: number;
+    unit_price: number;
+    quantity: number;
+    total_price: number;
+    created_at: number;
+    updated_at: number;
+    sessionId: number;
 };
